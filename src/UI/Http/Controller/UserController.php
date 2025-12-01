@@ -4,7 +4,7 @@ namespace App\UI\Http\Controller;
 
 use App\Application\User\DTO\UserDTO;
 use App\Application\User\Service\UserService;
-use App\Domain\User\Entity\User;
+use App\Infrastructure\ORM\User\UserEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -27,16 +27,16 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(User $user, #[MapRequestPayload] UserDTO $userDTO): JsonResponse
+    public function update(UserEntity $userEntity, #[MapRequestPayload] UserDTO $userDTO): JsonResponse
     {
-        $this->userService->updateUser($user, $userDTO);
+        $this->userService->updateUser($userEntity->toDomain(), $userDTO);
         return new JsonResponse(null, 200);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
-    public function delete(User $user): JsonResponse
+    public function delete(UserEntity $userEntity): JsonResponse
     {
-        $this->userService->deleteUser($user);
+        $this->userService->deleteUser($userEntity->toDomain());
         return new JsonResponse(null, 204);
     }
 

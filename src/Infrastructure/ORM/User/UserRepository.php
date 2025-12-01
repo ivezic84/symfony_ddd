@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\User;
+namespace App\Infrastructure\ORM\User;
 
 use App\Domain\User\Entity\User;
 use App\Domain\User\Repository\UserRepositoryInterface;
@@ -15,25 +15,24 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
     public function save(User $user): void
     {
-        $this->em->persist($user);
+        $entity = UserEntity::fromDomain($user);
+        $this->em->persist($entity);
         $this->em->flush();
     }
+
 
     public function delete(User $user): void
     {
-        $user->delete();
-        $this->em->persist($user);
+        $entity = UserEntity::fromDomain($user);
+        $this->em->remove($entity);
         $this->em->flush();
     }
 
+
     public function findById(int $id): ?User
     {
-        return $this->em->getRepository(User::class)->find($id);
-    }
-
-    public function findByEmail(string $email): ?User
-    {
-        return $this->em->getRepository(User::class)->findOneBy(['email.value' => strtolower($email)]);
+        $entity = $this->em->getRepository(UserEntity::class)->find($id);
+        return $entity?->toDomain();
     }
 
 }

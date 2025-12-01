@@ -21,8 +21,8 @@ doctrine:
             Domain:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/src/Domain'
-                prefix: 'App\Domain'
+                dir: '%kernel.project_dir%/src/Infrastructure'
+                prefix: 'App\Infrastructure'
 
         controller_resolver:
             auto_mapping: false
