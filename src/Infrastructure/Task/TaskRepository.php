@@ -7,7 +7,7 @@ use App\Domain\Task\Repository\TaskRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class DoctrineTaskRepository extends ServiceEntityRepository implements TaskRepositoryInterface
+class TaskRepository extends ServiceEntityRepository implements TaskRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -26,4 +26,5 @@ class DoctrineTaskRepository extends ServiceEntityRepository implements TaskRepo
         $task = parent::find($id);
         return $task;
     }
+
 }
