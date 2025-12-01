@@ -3,10 +3,11 @@
 namespace App\Domain\User\Entity;
 
 use App\Domain\Common\BaseEntity;
-use App\Infrastructure\Task\UserRepository;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Domain\User\ValueObject\Email;
+use App\Domain\User\ValueObject\ZipCode;
+use App\Infrastructure\User\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -37,102 +38,45 @@ class User extends BaseEntity
     #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $deleted = false;
 
-    #[Assert\Email(
-        message: 'Die E-Mail-Adresse {{ value }} st keine gültige E-Mail-Adresse.',
-    )]
-    #[Assert\Email]
-    #[ORM\Column(type: 'string', length: 255, unique: true, nullable: true)]
-    private ?string $email = null;
+    #[ORM\Embedded(class: Email::class, columnPrefix: "email_")]
+    private ?Email $email = null;
 
 
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): void
-    {
-        $this->address = $address;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): void
-    {
-        $this->city = $city;
-    }
-
-    public function getZip(): ?string
-    {
-        return $this->zip;
-    }
-
-    public function setZip(?string $zip): void
-    {
-        $this->zip = $zip;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?string $phone): void
-    {
-        $this->phone = $phone;
-    }
-
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(?string $firstName): void
+    public function updateName(string $firstName, string $lastName): void
     {
         $this->firstName = $firstName;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(?string $lastName): void
-    {
         $this->lastName = $lastName;
     }
 
-    public function getBirthdate(): ?\DateTime
-    {
-        return $this->birthdate;
-    }
-
-    public function setBirthdate(?\DateTime $birthdate): void
-    {
-        $this->birthdate = $birthdate;
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    public function setDeleted(bool $deleted): void
-    {
-        $this->deleted = $deleted;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): void
+    public function updateEmail(Email $email): void
     {
         $this->email = $email;
+    }
+
+    public function __construct(string $firstName, string $lastName, Email $email)
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->email = $email;
+    }
+
+    public function updateContactInfo(?string $address, ?string $city, ?ZipCode $zip, ?string $phone): void
+    {
+        $this->address = $address;
+        $this->city = $city;
+        $this->zip = $zip;
+        $this->phone = $phone;
+    }
+
+    public function changeEmail(Email $email): void
+    {
+        $this->email = $email;
+    }
+
+
+    public function delete(): void
+    {
+        $this->deleted = true;
     }
 
 }
