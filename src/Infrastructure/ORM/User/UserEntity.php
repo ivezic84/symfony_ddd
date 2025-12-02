@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity('email')]
+#[ORM\Table(name: 'user')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class UserEntity extends BaseEntity
 {
@@ -51,7 +52,7 @@ class UserEntity extends BaseEntity
 
         $entity->firstName = $user->getFirstName();
         $entity->lastName = $user->getLastName();
-        $entity->email = $user->getEmail()->value();
+        $entity->email = $user->getEmail();
         return $entity;
     }
 

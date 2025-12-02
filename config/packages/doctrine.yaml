@@ -21,6 +21,12 @@ doctrine:
             Domain:
                 is_bundle: false
                 type: attribute
+                dir: '%kernel.project_dir%/src/Domain'
+                prefix: 'App\Domain'
+
+            Infrastructure:
+                is_bundle: false
+                type: attribute
                 dir: '%kernel.project_dir%/src/Infrastructure'
                 prefix: 'App\Infrastructure'
 
