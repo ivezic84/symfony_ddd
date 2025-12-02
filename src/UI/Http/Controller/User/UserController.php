@@ -1,15 +1,15 @@
 <?php
 
-namespace App\UI\Http\Controller;
+namespace App\UI\Http\Controller\User;
 
 use App\Application\User\DTO\UserDTO;
 use App\Application\User\Service\UserService;
 use App\Infrastructure\ORM\User\UserEntity;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
-use OpenApi\Attributes as OA;
 
 #[OA\Tag(name: "User")]
 #[Route('/api/user')]

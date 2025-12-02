@@ -2,18 +2,17 @@
 
 namespace App\Infrastructure\ORM\User;
 
-use App\Domain\User\Entity\User;
+use App\Domain\User\Entity\DomainUser;
 use App\Domain\User\Repository\UserRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
 
     public function __construct(private EntityManagerInterface $em) {}
 
 
-    public function save(User $user): void
+    public function save(DomainUser $user): void
     {
         $entity = UserEntity::fromDomain($user);
         $this->em->persist($entity);
@@ -21,7 +20,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
 
-    public function delete(User $user): void
+    public function delete(DomainUser $user): void
     {
         $entity = UserEntity::fromDomain($user);
         $this->em->remove($entity);
@@ -29,10 +28,16 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
 
-    public function findById(int $id): ?User
+    public function findById(int $id): ?DomainUser
     {
         $entity = $this->em->getRepository(UserEntity::class)->find($id);
         return $entity?->toDomain();
     }
+
+    public function getEntityById(int $id): ?UserEntity
+    {
+        return $this->em->getRepository(UserEntity::class)->find($id);
+    }
+
 
 }

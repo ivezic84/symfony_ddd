@@ -3,14 +3,14 @@
 namespace App\Infrastructure\ORM\User;
 
 use App\Domain\Common\BaseEntity;
-use App\Domain\User\Entity\User;
+use App\Domain\User\Entity\DomainUser;
 use App\Domain\User\ValueObject\Email;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity('email')]
 #[ORM\Table(name: 'user')]
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity]
 class UserEntity extends BaseEntity
 {
 
@@ -43,7 +43,7 @@ class UserEntity extends BaseEntity
 
 
     // --------- Mapping from Domain ---------
-    public static function fromDomain(User $user): self
+    public static function fromDomain(DomainUser $user): self
     {
         $entity = new self();
         if ($user->getId()) {
@@ -53,17 +53,71 @@ class UserEntity extends BaseEntity
         $entity->firstName = $user->getFirstName();
         $entity->lastName = $user->getLastName();
         $entity->email = $user->getEmail();
+        $entity->address = $user->getAddress();
+        $entity->city = $user->getCity();
+        $entity->zip = $user->getZip();
+        $entity->phone = $user->getPhone();
         return $entity;
     }
 
     // --------- Mapping to Domain ---------
-    public function toDomain(): User
+    public function toDomain(): DomainUser
     {
-        return new User(
+        $user = new DomainUser(
             $this->firstName,
             $this->lastName,
-            new Email($this->email)
+            $this->email
         );
+
+        $user->setId($this->id);
+
+        return $user;
+    }
+
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function getZip(): ?string
+    {
+        return $this->zip;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function getBirthdate(): ?\DateTime
+    {
+        return $this->birthdate;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function getEmail(): ?Email
+    {
+        return $this->email;
     }
 
 }

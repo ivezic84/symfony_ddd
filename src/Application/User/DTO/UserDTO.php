@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class UserDTO
 {
-
     #[Assert\NotBlank(message: "First name is required")]
     #[Assert\Length(max: 50)]
     public string $firstName;
