@@ -5,6 +5,7 @@ namespace App\Application\Task\Service;
 use App\Application\Task\DTO\TaskDTO;
 use App\Domain\Task\Entity\DomainTask;
 use App\Domain\Task\Repository\TaskRepositoryInterface;
+use App\Domain\Task\Service\TaskCreationPolicy;
 use App\Domain\User\Repository\UserRepositoryInterface;
 
 class TaskService
@@ -12,8 +13,11 @@ class TaskService
 
     public function __construct(
         private TaskRepositoryInterface $taskRepository,
-        private UserRepositoryInterface $userRepository
-    ) {}
+        private UserRepositoryInterface $userRepository,
+        private TaskCreationPolicy      $taskCreationPolicy
+    )
+    {
+    }
 
 
     public function createTask(TaskDTO $taskDTO): DomainTask
@@ -25,6 +29,9 @@ class TaskService
 
         // domain user za domain task
         $domainUser = $userEntity->toDomain();
+
+        $currentTaskCount = count($this->taskRepository->findTasksByUser($userEntity));
+        $this->taskCreationPolicy->assertCanCreateTask($currentTaskCount);
 
         $task = new DomainTask(
             title: $taskDTO->title,
@@ -42,7 +49,6 @@ class TaskService
     {
         $task->setTitle($taskDTO->title);
         $task->setDescription($taskDTO->description ?? null);
-
 
         if (isset($taskDTO->userId)) {
             $user = $this->userRepository->findById($taskDTO->userId);

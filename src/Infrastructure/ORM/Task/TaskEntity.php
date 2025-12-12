@@ -18,7 +18,6 @@ class TaskEntity extends BaseEntity
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-
     #[ORM\ManyToOne(targetEntity: UserEntity::class)]
     private UserEntity $user;
 
@@ -32,6 +31,7 @@ class TaskEntity extends BaseEntity
         $entity->user = $userEntity;
         return $entity;
     }
+
 
     // Mapping to Domain
     public function toDomain(): DomainTask

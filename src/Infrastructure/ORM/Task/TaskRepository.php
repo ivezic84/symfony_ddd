@@ -38,4 +38,11 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
         $entity = $this->em->getRepository(TaskEntity::class)->find($id);
         return $entity?->toDomain();
     }
+
+    public function findTasksByUser(UserEntity $userEntity): array
+    {
+        $entities = $this->em->getRepository(TaskEntity::class)->findBy(['user' => $userEntity]);
+        return array_map(fn(TaskEntity $e) => $e->toDomain(), $entities);
+    }
+
 }
